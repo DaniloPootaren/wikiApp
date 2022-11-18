@@ -1,14 +1,10 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {Text} from 'react-native';
 import {Box, Button, FlatList, Flex, Input, VStack, Center} from 'native-base';
 import {searchArticle} from './home.service';
 import {SearchItem} from './home.models';
 import {SearchItem as SearchItemComponent} from '../../components/SearchItem';
 import {useNavigation} from '@react-navigation/native';
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export const HomeScreen = () => {
   const [results, setResults] = useState<SearchItem[]>([]);
@@ -20,11 +16,17 @@ export const HomeScreen = () => {
     setLoading(true);
     searchArticle(searchQuery)
       .then(res => setResults(res.data.query.search))
+      .catch(_e => {
+        // @Dev: Best way to handle error is to implement axios interceptors.
+        // TODO: Implement Axios interceptor to catch errors, based on error codes
+        // can easily create popup accordingly
+        console.log('An Error has occured');
+      })
       .finally(() => setLoading(false));
   };
 
   return (
-    <Flex height="full" style={styles.container}>
+    <Flex height="full">
       <VStack padding="2" flex={1} justifyContent="center">
         <Box alignItems="center">
           <Input
